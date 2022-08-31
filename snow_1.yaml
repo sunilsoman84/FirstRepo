@@ -55,17 +55,32 @@
       register: ci_info
       with_items:
         - "{{ task_info.json.result }}"
+      when: has_affected_cis | bool
+      
+      
+    - name: Collect affected CI
+      ansible.builtin.set_fact:
+        snow_affected_cis: "{{ snow_affected_cis | default({}) | combine ({item.json.result.asset_tag: item.json.result.name}) }}"
+      with_items:
+        - "{{ ci_info.results }}"
+      when: has_affected_cis | bool
+      
+     - debug
+       msg: 
+         - "{{item}}"
+       with_items:
+         - "{{snow_affected_cis}}"
 
-
-    - name: Create inventory
-      vars:
-        name: "{{ item.0.json.result.name }}"
-        ansible_host: "{{ item.0.json.result.ip_address }}"  
-        
-      ansible.builtin.add_host:  
-        name: "{{ name }}"
-        inventory: "snow"
-        groups: "dev"
-        description: "CI from {{ snow_change_id }}"
-      loop: "{{ ci_info.results | list }}" 
+    #- name: Create inventory
+    #  vars:
+    #    name: "{{ item.0.json.result.name }}"
+    #    ansible_host: "{{ item.0.json.result.ip_address }}"  
+    #    
+    #  ansible.builtin.add_host:  
+    #    name: "{{ name }}"
+    #    inventory: "snow"
+    #    groups: "dev"
+    #    description: "CI from {{ snow_change_id }}"
+    #  loop: "{{ ci_info.results | list }}" 
  
+    
