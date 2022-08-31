@@ -65,11 +65,11 @@
         - "{{ ci_info.results }}"
       when: has_affected_cis | bool
       
-     - debug
-       msg: 
-         - "{{item}}"
-       with_items:
-         - "{{snow_affected_cis}}"
+    - debug
+  msg: 
+          - "{{item}}"
+  with_items:
+          - "{{snow_affected_cis}}"
 
     #- name: Create inventory
     #  vars:
