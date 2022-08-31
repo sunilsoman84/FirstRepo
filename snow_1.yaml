@@ -56,3 +56,24 @@
       with_items:
         - "{{ task_info.json.result }}"
       when: has_affected_cis | bool
+      
+    - name: Create {{ snow_change_id }} inventory
+      awx.awx.inventory:
+        name: "{{ snow_change_id }}"
+        description: "Inventory related to {{ snow_change_id }}"
+        organization: "{{ org }}"
+        validate_certs: "{{ check_ssl }}"
+      when: has_affected_cis | bool
+     
+    - name: Add host(s) to {{ snow_change_id }} inventory
+      vars:
+        name: "{{ item.0.json.result.name }}"
+        ansible_host: "{{ item.0.json.result.ip_address }}"
+      awx.awx.host:
+        inventory: "snow"
+        name: "{{ name }}"
+        description: "CI from {{ snow_change_id }}"
+        validate_certs: "{{ check_ssl }}"
+        variables:
+          ansible_host: "{{ ansible_host }}"
+      loop: "{{ ci_info.results | list }}"
