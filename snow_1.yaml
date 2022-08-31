@@ -55,9 +55,9 @@
       register: ci_info
       with_items:
         - "{{ task_info.json.result }}"
-      when: has_affected_cis | bool
+      #when: has_affected_cis | bool
       
-    - name: Create {{ snow_change_id }} inventory
+    - name: Create inventory
       ###awx.awx.inventory:
       ##  name: "snow"
        ## description: "Inventory related to {{ snow_change_id }}"
