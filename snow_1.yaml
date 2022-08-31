@@ -32,6 +32,6 @@
         password: "{{ sn_password }}"
       register: change_info
     
-    - name: get output status till now
+    
       debug:
       msg: change_info
