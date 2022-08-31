@@ -57,17 +57,17 @@
         - "{{ task_info.json.result }}"
       #when: has_affected_cis | bool
       
-    - name: Create inventory
+    #- name: Create inventory
       ###awx.awx.inventory:
       ##  name: "snow"
        ## description: "Inventory related to {{ snow_change_id }}"
        # organization: "{{ org }}"
         #validate_certs: "{{ check_ssl }}"
       #when: has_affected_cis | bool
-      ansible.builtin.add_host:
-      name: "{{ item.0.json.result.name }}"
-      groups: "dev"
-      inventory: "snow"
+      #ansible.builtin.add_host:
+      #name: "{{ item.0.json.result.name }}"
+      #groups: "dev"
+      #inventory: "snow"
      
     - name: Add host(s) to {{ snow_change_id }} inventory
       vars:
