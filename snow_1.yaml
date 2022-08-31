@@ -31,54 +31,7 @@
         user: "{{ sn_username }}"
         password: "{{ sn_password }}"
       register: change_info
-
-    - name: Collect Change sys_id information
-      ansible.builtin.set_fact:
-        snow_change_sys_id: "{{ change_info.json.result.0.sys_id }}"
-
-    - name: Get ServiceNow Task CI items
-      ansible.builtin.uri:
-        url: "{{ uri }}/task_ci?sysparm_query=task={{ snow_change_sys_id }}"
-        user: "{{ sn_username }}"
-        password: "{{ sn_password }}"
-      register: task_info
-
-    - name: Check if Change has affected CIs
-      ansible.builtin.set_fact:
-        has_affected_cis: "{{ 'no' if task_info.json.result | length < 1 else 'yes' }}"
-
-    - name: Get ServiceNow CI information
-      ansible.builtin.uri:
-        url: "{{ uri }}/cmdb_ci/{{ item.ci_item.value }}?sysparm_display_value=true"
-        user: "{{ sn_username }}"
-        password: "{{ sn_password }}"
-      register: ci_info
-      with_items:
-        - "{{ task_info.json.result }}"
-      when: has_affected_cis | bool
-      
-      
-    - name: Collect affected CI
-      ansible.builtin.set_fact:
-        snow_affected_cis: "{{ snow_affected_cis | default({}) | combine ({item.json.result.asset_tag: item.json.result.name}) }}"
-      with_items:
-        - "{{ ci_info.results }}"
-      when: has_affected_cis | bool
-      
-      msg: 
-        - "{{item}}"
-        - "{{snow_affected_cis}}"
-
-    #- name: Create inventory
-    #  vars:
-    #    name: "{{ item.0.json.result.name }}"
-    #    ansible_host: "{{ item.0.json.result.ip_address }}"  
-    #    
-    #  ansible.builtin.add_host:  
-    #    name: "{{ name }}"
-    #    inventory: "snow"
-    #    groups: "dev"
-    #    description: "CI from {{ snow_change_id }}"
-    #  loop: "{{ ci_info.results | list }}" 
- 
     
+    - name: get output status till now
+      debug:
+      msg: change_info
