@@ -34,4 +34,4 @@
     
     
       debug:
-      msg: change_info
+      var: change_info
