@@ -1,0 +1,58 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    snow_change_id: CHG0040003
+    org: Default
+    check_ssl: no
+    sn_instance: "kdcademo5"
+    sn_username: "sunil.soman"
+    sn_password: "Chenai101chenai"
+    uri: "https://{{ sn_instance }}.service-now.com/api/now/table"
+    location_bdc_cities: []
+    location_soc_cities: []
+    bdc: []
+    soc: []
+    host_statuses:
+      - installed
+    python_interpreter: /usr/bin/python2.7
+
+  pre_tasks:
+   - setup:
+      gather_subset:
+       - '!all'
+  
+  tasks:
+    - name: Get ServiceNow Change information
+      ansible.builtin.uri:
+        url: "{{ uri }}/change_request?sysparm_query=number={{ snow_change_id }}"
+        user: "{{ sn_username }}"
+        password: "{{ sn_password }}"
+      register: change_info
+
+    - name: Collect Change sys_id information
+      ansible.builtin.set_fact:
+        snow_change_sys_id: "{{ change_info.json.result.0.sys_id }}"
+
+    - name: Get ServiceNow Task CI items
+      ansible.builtin.uri:
+        url: "{{ uri }}/task_ci?sysparm_query=task={{ snow_change_sys_id }}"
+        user: "{{ sn_username }}"
+        password: "{{ sn_password }}"
+      register: task_info
+
+    - name: Check if Change has affected CIs
+      ansible.builtin.set_fact:
+        has_affected_cis: "{{ 'no' if task_info.json.result | length < 1 else 'yes' }}"
+
+    - name: Get ServiceNow CI information
+      ansible.builtin.uri:
+        url: "{{ uri }}/cmdb_ci/{{ item.ci_item.value }}?sysparm_display_value=true"
+        user: "{{ sn_username }}"
+        password: "{{ sn_password }}"
+      register: ci_info
+      with_items:
+        - "{{ task_info.json.result }}"
+      when: has_affected_cis | bool
