@@ -34,4 +34,4 @@
     
     - name: Get Change information printed
       debug:
-      var: change_info
+        msg: change_info
