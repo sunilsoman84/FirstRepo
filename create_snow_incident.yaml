@@ -12,7 +12,6 @@
 #  register: new_incident
 
 
----
 - name: Create an incident
   snow_record:
     username: admin
