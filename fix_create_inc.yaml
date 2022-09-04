@@ -1,8 +1,7 @@
 --- 
 - 
   name: "Create an incident"
-  register: new_incident
-  snow_record: 
+    servicenow.servicenow.snow_record: 
     data: 
       priority: 2
       severity: 3
@@ -11,3 +10,4 @@
     password: QAroGe@j-A98
     state: present
     username: admin
+  register: new_incident
