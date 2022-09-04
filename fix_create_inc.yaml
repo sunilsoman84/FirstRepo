@@ -1,13 +1,13 @@
 --- 
 - 
   name: "Create an incident"
-    servicenow.servicenow.snow_record: 
-    data: 
-      priority: 2
-      severity: 3
-      short_description: "This is a test incident opened by Ansible"
+  servicenow.servicenow.snow_record: 
     instance: dev82381
     password: QAroGe@j-A98
     state: present
     username: admin
+    data: 
+      priority: 2
+      severity: 3
+      short_description: "This is a test incident opened by Ansible"
   register: new_incident
