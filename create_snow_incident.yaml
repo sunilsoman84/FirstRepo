@@ -6,11 +6,11 @@
   tasks:
     - name: Create an incident
       snow_record:
-      username: admin
-      password: QAroGe@j-A98
-      instance: dev82381
-      state: present
-      data:
+        username: admin
+        password: QAroGe@j-A98
+        instance: dev82381
+        state: present
+        data:
         short_description: "This is a test incident opened by Ansible"
         severity: 3
         priority: 2
